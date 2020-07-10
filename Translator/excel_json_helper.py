@@ -135,7 +135,10 @@ class ExcelJsonHelper:
             json_object[item]={}
         
         if len(path_list)==0: # it was the last item
-            json_object[item]=value
+            if isinstance(value,dict) :
+                json_object[item].update(value)
+            else : 
+                json_object[item]=value
             
         else:
             cls.recursivity_json_path(path_list, json_object[item],value)
@@ -179,6 +182,9 @@ class ExcelJsonHelper:
         myList= list(map(loc_fun , myList))
         return myList
 
+
+    # from a list of sheets configuration like events in config.py 
+    # 
     @classmethod
     def flatten_planting_events(cls,accum_list,sheet_list):
 

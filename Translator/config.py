@@ -24,6 +24,27 @@ class Config:
                 "headerRow":"1"
 
             },
+            
+            {
+                "name":"residue",
+                "type":"map",
+                "path":["experiments","initial_conditions"],
+                "sheetName":"Residue",
+                "transformHeader":"toLowerCase",
+                "headerRow":"1"
+
+            },
+
+            {
+                "name":"tillage",
+                "type":"map",
+                "path":["experiments","initial_conditions"],
+                "sheetName":"Tillage",
+                "transformHeader":"toLowerCase",
+                "headerRow":"1"
+
+            },
+
             {
                 "name":"initial_conditions_soil",
                 "type":"list",
