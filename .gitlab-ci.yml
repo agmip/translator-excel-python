@@ -25,7 +25,7 @@ before_script:
   - source venv/bin/activate
   - pwd
   - ls
-  - pip install environment/requirements.txt 
+  - pip install -r environment/requirements.txt 
   - pip install pyinstaller
 
 
