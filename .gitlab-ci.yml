@@ -36,3 +36,14 @@ build:
   artifacts:
     paths:
       - ./Pyinstaller/build/PythonTranslatorExcelAgMIP
+
+release:
+  stage: release
+  only: tags
+  release:
+    name: My $CI_PROJECT_NAME Release 1.0-$CI_COMMIT_SHORT_SHA
+    description: ./release_changelog.txt
+    assets:
+    - name: PythonTranslatorExcelAgMIP
+      path: Pyinstaller/build/PythonTranslatorExcelAgMIP
+    
