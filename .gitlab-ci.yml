@@ -31,6 +31,8 @@ before_script:
 
 build:
   script:
-    - pyinstaller --onefile --distpath "./"  --workpath  "./Pyinstaller/" PythonTranslatorExcelAgMIP.py
+    - pyinstaller --onefile --distpath "./Pyinstaller/build"  --workpath  "./Pyinstaller/" PythonTranslatorExcelAgMIP.py
 
-
+  artifacts:
+    paths:
+      - ./Pyinstaller/build/PythonTranslatorExcelAgMIP
