@@ -25,7 +25,7 @@ before_script:
   - source venv/bin/activate
   - pwd
   - ls
-  - pip install environment/env_translator.txt 
+  - pip install environment/requirements.txt 
   - pip install pyinstaller
 
 
