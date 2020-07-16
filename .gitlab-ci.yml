@@ -37,8 +37,11 @@ build:
     paths:
       - ./Pyinstaller/build/PythonTranslatorExcelAgMIP
 
-release:
+python-release:
   stage: release
+  image: registry.gitlab.com/gitlab-org/release-cli:latest
+  script:
+    - echo 'iOS release job'
   only: tags
   release:
     name: My $CI_PROJECT_NAME Release 1.0-$CI_COMMIT_SHORT_SHA
