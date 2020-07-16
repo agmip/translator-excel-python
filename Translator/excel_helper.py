@@ -1,5 +1,9 @@
 ﻿
 import xlrd 
+import sys
+
+def close():
+   sys.exit(2)
 
 class ExcelHelper:
     """A class helper to manage excel files"""

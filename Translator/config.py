@@ -13,7 +13,7 @@ class Config:
                 "sheetName":"Metadata",
                 "transformHeader":"toLowerCase",
                 "headerRow":"1",
-                "excludeSubset":["crid","cul_name"]
+                #"excludeSubset":["crid","cul_name"]
             },
             {
                 "name":"initial_conditions",
