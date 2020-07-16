@@ -24,6 +24,7 @@ before_script:
   - virtualenv venv
   - source venv/bin/activate
   - pwd
+  - ls
   - pip install environment/env_translator.txt 
   - pip install pyinstaller
 
