@@ -35,18 +35,22 @@ before_script:
 
 build:
   stage: build
+  rules: # Run this job when a tag is created manually
+    - if: $CI_COMMIT_TAG  
   script:
     - pyinstaller --onefile --distpath "./Pyinstaller/build"  --workpath  "./Pyinstaller/" PythonTranslatorExcelAgMIP.py
   artifacts:
     paths: ["./Pyinstaller/build/PythonTranslatorExcelAgMIP"]
 
-release:
-  stage: release
-  rules: # Run this job when a tag is created manually
-    - if: $CI_COMMIT_TAG   
-  script:
-    - echo 'Exe release job'
-    - ls ./Pyinstaller/build/
+# release:
+#   stage: release
+#   rules: # Run this job when a tag is created manually
+#     - if: $CI_COMMIT_TAG   
+#   script:
+#     - echo 'Exe release job'
+#     - ls
+#     - ls Pyinstaller/build/
+    
   
-  dependencies: []
+#   dependencies: []
   
