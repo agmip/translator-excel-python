@@ -41,7 +41,12 @@ release:
   image: registry.gitlab.com/gitlab-org/release-cli:latest
   script:
     - echo 'Exe release job'
-  tag_name: v1.0.0-exe
+  when: manual
+  # We recommend the use of `except: tags` to prevent these pipelines
+  # from running. See the notes section below for details.
+  except:
+    - tags
+
   
 
     
