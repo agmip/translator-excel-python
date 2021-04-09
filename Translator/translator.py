@@ -9,7 +9,7 @@ import sys
 def close():
    sys.exit(2)
 
-#CONTANS
+#CONSTANS
 EVENTS_LABEL_LIST=["events"] # special process for events section in excel file 
 OBSERVATIONS_LABEL="observations" # special process for observatioins 
 SUMMARY_LABEL="summary" # special process for observations 
@@ -75,8 +75,8 @@ class Translator:
                     temp_path=list(local_data["path"]) # copy object because reference pass produce mutable effect
             
                     set_object= None
-                    existKeys= ExcelJsonHelper.validate_keys([local_data["name"], key], child_grouper )# validate that the keys exists in path
-            
+                    # validate that the keys exist in path
+                    existKeys= ExcelJsonHelper.validate_keys([local_data["name"], key], child_grouper )
                     if existKeys:# validate that the keys exists in path
                         if local_data["type"]=="list":
                             set_object=   child_grouper[local_data["name"]][key]
