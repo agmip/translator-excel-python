@@ -9,6 +9,9 @@ class ExcelHelper:
     """A class helper to manage excel files"""
     def __init__(self):
         self.XL_CELL_DATE= xlrd.XL_CELL_DATE
+        self.XL_CELL_TEXT= xlrd.XL_CELL_TEXT
+        self.XL_CELL_EMPTY = xlrd.XL_CELL_EMPTY
+        self.XL_CELL_NUMBER=xlrd.XL_CELL_NUMBER
 
         self.sheets_names= []
 

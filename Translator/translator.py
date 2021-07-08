@@ -35,66 +35,119 @@ class Translator:
         
         my_excel_helper.load_file(excel_name)
         
-            
-         
         sheets_names= my_excel_helper.get_sheets_names()
        
 
         #Step 1 extract data from excel
         for data in  json_parameters:
-            
-
             # events process
-            if(data["name"] in EVENTS_LABEL_LIST):
+
+            data_name = data["name"]
+            if(data_name in EVENTS_LABEL_LIST):
                
                 list_objects=ExcelJsonHelper.several_sheets_reader(data["eventsType"], data,  my_excel_helper, "addEvents")
-                child_grouper["events"]=ExcelJsonHelper.group_by_linker(list_objects)
+                child_grouper["events"]=list_objects
             
             #  observed data process    
-            elif (data["name"] in [OBSERVATIONS_LABEL,SUMMARY_LABEL ] ):
+            elif (data_name in [OBSERVATIONS_LABEL,SUMMARY_LABEL ] ):
                 
                 sheetsList=list(filter(lambda x: data["sheetPattern"] in x, sheets_names ))
                 list_objects=ExcelJsonHelper.several_sheets_reader(sheetsList, data,  my_excel_helper)
-                child_grouper[data["name"]]=ExcelJsonHelper.group_by_linker(list_objects)
+                child_grouper[data_name]=list_objects
 
             # other sheets
             else:    
                 list_objects=ExcelJsonHelper.get_data_json_like(data,my_excel_helper)
-                child_grouper[data["name"]]=ExcelJsonHelper.group_by_linker(list_objects)
+                child_grouper[data_name]=list_objects
+        
+        print("Step 1 finished (loading)")
+        ## step 2 expand method
+        EXPAND_ORDER = Config.get_expand_order()
         
 
-        ## step 2 organice data joining based on ids that link elements, create paths when applies
-        for local_data in  json_parameters: 
-    
-            if len(local_data["path"]) >1 :# has a long path, it is not a root element
+        for expandable_item in EXPAND_ORDER:
+            local_config=next((item for item in json_parameters 
+                                if item["name"] == expandable_item),None)
+
+            config_name = local_config["name"]
+            config_expand = local_config["expand"]
+            
+            print("Config", config_name)
+            
+            for exp in config_expand:
+                col= exp["col"]
+                config_name_expand= exp["config_name"]
+                config_bool_delete= exp.get("delete_after")
+
+                for item_to_expand in child_grouper[config_name]:
+
+                    
+                    currentExpansion= next((item for item in child_grouper[config_name_expand] 
+                                            if item[col] == item_to_expand[col]),None)
+                    # we assume it exists
+                    if currentExpansion:
+                        item_to_expand.update(currentExpansion)
+                        if config_bool_delete:
+                            del item_to_expand[col]                    #else: 
+                        #print("Warning:expand sheet:%s didn't have id:%s"%(config_name_expand,item_to_expand[col]))
+                del child_grouper[config_name_expand] # one expand aplies only for one sheet
+
         
+        """
+        experiments: [{}],
+        initial_conditions: [{}]
+        """
+        print("Step 2 finished (expanding)")
+        ## step 3 organice data joining based on ids that link elements, create paths when applies
+        for local_data in  json_parameters: 
+            
+
+            if len(local_data["path"]) >1 :# has a long path, it is not a root element
+                
+                data_levels=local_data["levels"]
+                data_type=local_data["type"]
                 base_path=local_data["path"].pop(0) # remove first elements, root element
         
-                for key, value in child_grouper[base_path].items():
-            
-                    temp_path=list(local_data["path"]) # copy object because reference pass produce mutable effect
-            
-                    set_object= None
-                    # validate that the keys exist in path
-                    existKeys= ExcelJsonHelper.validate_keys([local_data["name"], key], child_grouper )
-                    if existKeys:# validate that the keys exists in path
-                        if local_data["type"]=="list":
-                            set_object=   child_grouper[local_data["name"]][key]
-                        else :    
-                            set_object=   child_grouper[local_data["name"]][key][0]
+                for item in child_grouper[local_data["name"]]:
+                    # identify level id
+                    selected_level = None
+                    for level in data_levels:
+                        if level in item and item: # it exist and it is not empty 
+                            selected_level = level
+                            break # one level is enough
+                    
+                    if not selected_level:
+                        print("item not link with experiments:", item)
+                        
+                   
+                    #locate into the map
+                    for itemParent in child_grouper[base_path]:
+                        # it can either experiment or treatments IDs
+                        # some items don't have the selected level id
+                        
+                        if selected_level in itemParent \
+                            and  itemParent[selected_level]==item[selected_level]:
 
-                        ExcelJsonHelper.recursivity_json_path(temp_path, value[0], set_object  )
-                #ExcelJsonHelper.writeJson(child_grouper[local_data["name"]],"examples/json/parts"+local_data["name"])
+                            temp_path1=list(local_data["path"])
+                            temp_path2=list(local_data["path"])
+
+                            
+                            ExcelJsonHelper.create_path(temp_path1,itemParent)
+                            
+                            ExcelJsonHelper.recursivity_json_path(temp_path2,itemParent, item, data_type)
+            
+                    
                 if local_data["name"] in child_grouper.keys():
                     del child_grouper[local_data["name"]]  # memory clean
 
-        ## step 3 format json extract objects 
-        for key, value in child_grouper.items():
-            new_list=[]
-            for key2, value2 in child_grouper[key].items():
-                new_list.append(value2[0])
-        
-            child_grouper[key]= new_list
 
-        # write in disk the json file
+        print("Step 3 finished (Joning and linking)")
+
+
+        DELETE_THIS=["eid","treat_id", "wst_id", 'soil_id']
+        print("Step 4 finished (deleting ids)")
+
+        ExcelJsonHelper.remove_keys_level(child_grouper,3,DELETE_THIS)
+
+        print(child_grouper["experiments"])
         ExcelJsonHelper.write_json(child_grouper,outputfile)

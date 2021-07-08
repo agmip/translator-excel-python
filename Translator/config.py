@@ -1,89 +1,215 @@
 ﻿#!/usr/bin/python3
 
+
+# experiment items in agmip json are plots for this code
+
+LEVELS_EXPERIMENT = ["treat_id", "eid"]
+LEVELS_WEATHER = ["wst_id"]
+LEVELS_SOIL = ["soil_id"]
+
+EXPAND_ORDER=["experiment_description","treatments","experiments", "weathers"]
+
 class Config:
     """A class to define how to scan the JSON file"""
+
+    @classmethod
+    def get_expand_order(cls):
+        return EXPAND_ORDER
     @classmethod
     def get_configuration(cls):
 
+        # the item's order is important
         dict = [   
-            {
+            {#plot
                 "name":"experiments",
                 "path":["experiments"],
                 "type":"list",
-                "sheetName":"Metadata",
+                "sheetName":"Plots",
                 "transformHeader":"toLowerCase",
-                "headerRow":"1",
+                "transformSet":"reduceByIds",
+                "headerRow":"2",
+                "levels": LEVELS_EXPERIMENT,
+                "expand": [
+                    {"col":"trt_name","config_name":"treatments"},
+                    {"col":"cul_name","config_name":"crops"}
+                    ],
+                "renameHeader": [
+                    
+                    {"name":"treat_id" , "newName":"trt_name"}
+                ],
+                "takeSubset": ["trt_name", "cul_name"]
                 #"excludeSubset":["crid","cul_name"]
             },
             {
                 "name":"initial_conditions",
                 "type":"map",
                 "path":["experiments","initial_conditions"],
-                "sheetName":"Init_conditions",
+                "sheetName":"initial_conditions",
+                "levels": LEVELS_EXPERIMENT,
                 "transformHeader":"toLowerCase",
-                "headerRow":"1"
-
+                "headerRow":"2"
             },
-            
             {
-                "name":"residue",
-                "type":"map",
-                "path":["experiments","initial_conditions"],
-                "sheetName":"Residue",
+                "name":"treatments",
+                "type":"expandable",
+                "path":[],
+                "sheetName":"Treatments",
                 "transformHeader":"toLowerCase",
-                "headerRow":"1"
+                "headerRow":"2",
+                "expand": [{"col":"eid","config_name":"experiment_description"}],
+                "renameHeader": [
+                    {"name":"wst_id" , "newName":"wst_id_temp"},
+                    {"name":"wst_dataset" , "newName":"wst_id"},
 
+                    {"name":"trt_name" , "newName":"trt_long_name"},
+                    {"name":"treat_id" , "newName":"trt_name"}
+                ],
+                "excludeSubset":["wst_id_temp"]
             },
-
             {
-                "name":"tillage",
-                "type":"map",
-                "path":["experiments","initial_conditions"],
-                "sheetName":"Tillage",
+                "name":"experiment_description",
+                "type":"expandable",
+                "path":[],
+                "sheetName":"Experiment_description",
                 "transformHeader":"toLowerCase",
-                "headerRow":"1"
-
+                "headerRow":"2",
+                "expand": [{"col":"eid","config_name":"fields"}],
+                "typing":[
+                    {"col":"plyr","type":"integer"},
+                    {"col":"hayr","type":"integer"}
+                ]
+            },
+            {
+                "name":"fields",
+                "type":"expandable",
+                "path":[],
+                "sheetName":"Fields",
+                "transformHeader":"toLowerCase",
+                "headerRow":"2"
             },
 
             {
                 "name":"initial_conditions_soil",
                 "type":"list",
                 "path":["experiments","initial_conditions","soilLayer"],
-                "sheetName":"Init_conditions_Soil_layers",
+                "sheetName":"initial_condition_layers",
                 "transformHeader":"toLowerCase",
-                "headerRow":"1"
+                "levels": LEVELS_EXPERIMENT,
+                "headerRow":"2"
+            },
+            {
+                "name":"residue",
+                "type":"map",
+                "path":["experiments","initial_conditions"],
+                "sheetName":"Residue",
+                "transformHeader":"toLowerCase",
+                "levels": LEVELS_EXPERIMENT,
+                "headerRow":"2"
+
             },
             {
                 "name":"events",
                 "type":"list",
                 "path":["experiments","management","events"],
-                "eventsType":["Plantings", "Irrigations" , "Fertilizers", "Other", "Metadata"],
-                "eventsName":["planting", "irrigation" , "fertilizer", "other", "planting"],
-                "sheetConfig":{'Metadata':{'takeSubset':["id","crid","cul_name"]}},
+                "eventsType":["Planting_events", "Irrigation_events" , "Fertilizer_events", "Tillage_events",
+                                "Harvest_events", "Plots"],
+                "eventsName":["planting", "irrigation" , "fertilizer","tillage","harvest","planting"],
+                "sheetConfig":{
+                    'Plots':{'takeSubset':["eid","treat_id","cul_name"]},
+                    'Planting_events':{
+                        "renameHeader": [
+                            {"name":"pdate" , "newName":"date"}
+                        ]
+                    },
+                    'Harvest_events':{
+                        "renameHeader": [
+                            {"name":"hadat" , "newName":"date"}
+                        ]
+                    }
+                    ,
+                    'Irrigation_events':{
+                        "renameHeader": [
+                            {"name":"idate" , "newName":"date"}
+                        ]
+                    }
+                    ,
+                    'Fertilizer_events':{
+                        "renameHeader": [
+                            {"name":"fedate" , "newName":"date"}
+                        ]
+                    }
+                    ,
+                    'Tillage_events':{
+                        "renameHeader": [
+                            {"name":"tdate" , "newName":"date"}
+                        ]
+                    }
+                },
                 "transformHeader":"toLowerCase",
-                "headerRow":"1"
+                "levels": LEVELS_EXPERIMENT,
+                "headerRow":"2"
             },
-
-            # {
-            #     "name":"plantingEventMetadata",
-            #     "type":"list",
-            #     "path":["experiments","management","events"],
-            #     "eventsType":["Metadata"],
-            #     "eventsName":["planting"],
-            #     "transformHeader":"toLowerCase",
-            #     "headerRow":"1",
-            #     "takeSubset":["id","crid","cul_name"]
-            # },
-
+            ## soils
+            {
+                "name":"soils",
+                "path":["soils"],
+                "type":"list",
+                "sheetName":"Soil_metadata",
+                "transformHeader":"toLowerCase",
+                "headerRow":"2",
+                "levels": LEVELS_SOIL
+            },
+            {
+                "name":"soilLayer",
+                "type":"list",
+                "path":["soils","soilLayer"],
+                "sheetName":"Soil_profile_layers",
+                "transformHeader":"toLowerCase",
+                "headerRow":"2",
+                "levels": LEVELS_SOIL
+            },
 
             
             {
-                "name":"weathers",
-                "path":["weathers"],
-                "type":"list",
-                "sheetName":"Weather_meta",
+                "name":"crops",
+                "type":"expandable",
+                "path":[],
+                "sheetName":"Genotypes",
                 "transformHeader":"toLowerCase",
-                "headerRow":"1" 
+                "headerRow":"2",
+                "takeSubset": [ "cul_name", "crid"]
+            },
+
+            # weather
+            {
+                "name":"weatherStations",
+                "path":[],
+                "type":"expandable",
+                "sheetName":"Weather_stations",
+                "transformHeader":"toLowerCase",
+                "headerRow":"2",
+                "levels": LEVELS_WEATHER,
+                "renameHeader": [
+                    {"name":"wst_id" , "newName":"wst_id_temp"}
+                ]
+            },
+            {
+                "name":"weathers",
+                "type":"list",
+                "path":["weathers"],
+                "sheetName":"Treatments",
+                "transformHeader":"toLowerCase",
+                "transformSet":"reduceByIds",
+                "headerRow":"2",
+                "levels": LEVELS_WEATHER,
+                "takeSubset": ["wst_id","wst_id_temp"],
+                "renameHeader": [
+                    {"name":"wst_id" , "newName":"wst_id_temp"},
+                    {"name":"wst_dataset" , "newName":"wst_id"}
+                ],
+                "expand": [
+                    {"col":"wst_id_temp","config_name":"weatherStations", "delete_after":True}
+                ],
             },
             {
                 "name":"dailyWeather",
@@ -91,39 +217,11 @@ class Config:
                 "path":["weathers","dailyWeather"],
                 "sheetName":"Weather_daily",
                 "transformHeader":"toLowerCase",
-                "headerRow":"1"
-            },
-            {
-                "name":"soils",
-                "path":["soils"],
-                "type":"list",
-                "sheetName":"Soils_meta",
-                "transformHeader":"toLowerCase",
-                "headerRow":"1"
-            },
-            {
-                "name":"soilLayer",
-                "type":"list",
-                "path":["soils","soilLayer"],
-                "sheetName":"Soil_layers",
-                "transformHeader":"toLowerCase",
-                "headerRow":"1"
-            },
-            {
-                "name":"summary",
-                "type":"map",
-                "path":["experiments","observed"],
-                "sheetPattern":"Summary",
-                "transformHeader":"toLowerCase",
-                "headerRow":"1"
-            },
-            {#always after summary, because it creates the map object
-                "name":"observations",
-                "type":"list",
-                "path":["experiments","observed","timeSeries"],
-                "sheetPattern":"Obs",
-                "transformHeader":"toLowerCase",
-                "headerRow":"1"
+                "headerRow":"2",
+                "levels": LEVELS_WEATHER,
+                "renameHeader": [
+                    {"name":"wst_dataset" , "newName":"wst_id"}
+                ]
             }
         ]
         return dict
