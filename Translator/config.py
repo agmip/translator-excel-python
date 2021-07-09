@@ -30,8 +30,8 @@ class Config:
                 "headerRow":"2",
                 "levels": LEVELS_EXPERIMENT,
                 "expand": [
-                    {"col":"trt_name","config_name":"treatments"},
-                    {"col":"cul_name","config_name":"crops"}
+                    {"col":"trt_name","config_name":"treatments"}
+                    # {"col":"cul_name","config_name":"crops"}
                     ],
                 "renameHeader": [
                     
@@ -112,10 +112,9 @@ class Config:
                 "type":"list",
                 "path":["experiments","management","events"],
                 "eventsType":["Planting_events", "Irrigation_events" , "Fertilizer_events", "Tillage_events",
-                                "Harvest_events", "Plots"],
-                "eventsName":["planting", "irrigation" , "fertilizer","tillage","harvest","planting"],
+                                "Harvest_events"],
+                "eventsName":["planting", "irrigation" , "fertilizer","tillage","harvest"],
                 "sheetConfig":{
-                    'Plots':{'takeSubset':["eid","treat_id","cul_name"]},
                     'Planting_events':{
                         "renameHeader": [
                             {"name":"pdate" , "newName":"date"}
@@ -170,15 +169,15 @@ class Config:
             },
 
             
-            {
-                "name":"crops",
-                "type":"expandable",
-                "path":[],
-                "sheetName":"Genotypes",
-                "transformHeader":"toLowerCase",
-                "headerRow":"2",
-                "takeSubset": [ "cul_name", "crid"]
-            },
+            # {
+            #     "name":"crops",
+            #     "type":"expandable",
+            #     "path":[],
+            #     "sheetName":"Genotypes",
+            #     "transformHeader":"toLowerCase",
+            #     "headerRow":"2",
+            #     "takeSubset": [ "cul_name", "crid"]
+            # },
 
             # weather
             {

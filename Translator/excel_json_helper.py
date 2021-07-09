@@ -2,6 +2,7 @@
 
 import json 
 import datetime
+from typing import Dict, List
 
 
 ## returns the ne
@@ -198,7 +199,7 @@ class ExcelJsonHelper:
             elif type_item=="list": 
                 if isinstance(json_object[item], dict): # because all the elements are instanced as dict
                     json_object[item]=[]
-                json_object[item].append(value)
+                json_object[item].append(value.copy())
             
         else:
             cls.recursivity_json_path(path_list, json_object[item],value, type_item)
@@ -227,7 +228,7 @@ class ExcelJsonHelper:
             if apply_func=="addEvents" :
                 sheetElementsList=cls.add_events(sheetElementsList ,base_data["eventsName"][index])
 
-            if sheetName in ["Plots","Planting"]:
+            if sheetName in ["Plots","Planting","Genotypes"]:
                 listObjects=cls.flatten_planting_events(listObjects , sheetElementsList)
             else:
                 listObjects=listObjects + sheetElementsList
@@ -263,7 +264,7 @@ class ExcelJsonHelper:
     def flatten_planting_events(cls,accum_list,sheet_list):
 
         EVENT_TYPE = "planting"
-        IDS = [ "treat_id","eid"] # multilevel logic
+        IDS = [ "treat_id","eid", "cul_name"] # multilevel logic
         # assumption only there is a plating event
          
         
@@ -279,8 +280,8 @@ class ExcelJsonHelper:
                 if find_index is None: 
                     accum_list.append(sheet_element)
                 else:
-                    del sheet_element[IDS[0]]
-                    del sheet_element[IDS[1]]
+                    if IDS[0] in sheet_element: del sheet_element[IDS[0]]
+                    if IDS[1] in sheet_element: del sheet_element[IDS[1]]
                     accum_list[find_index]= {**sheet_element, **accum_list[find_index]}
             else:
                 accum_list.append(sheet_element)
@@ -309,3 +310,37 @@ class ExcelJsonHelper:
         else: return
 
 
+    # a function to get keys and values from the parents
+    @classmethod
+    def get_items_from_parent(cls,current_elements, keys, keys_values_parent=dict()):
+
+        KEY_EVENT="event"
+        keys_values_parent = keys_values_parent.copy() # hack memory issue
+        
+        
+        if KEY_EVENT in current_elements and current_elements[KEY_EVENT]=="planting":
+            current_elements.update(keys_values_parent)
+            print("planting", current_elements)
+        else:
+            if isinstance(current_elements, list):
+                
+                for value in current_elements:
+                    cls.get_items_from_parent(value,keys, keys_values_parent)
+            elif isinstance(current_elements, dict): 
+                
+                extracted_dic=cls.search_keys_in_dict(current_elements,keys)
+                
+                keys_values_parent.update(extracted_dic)
+                for key,value in current_elements.items():
+                    if isinstance(value,dict) or isinstance(value,list) :
+                        cls.get_items_from_parent(value,keys, keys_values_parent) 
+    
+    @classmethod
+    def search_keys_in_dict(cls,element:Dict,keys:List):
+        
+        result = dict()
+        for key in keys:
+            if key in element:
+                value= element[key]
+                result.update({key:value})
+        return result

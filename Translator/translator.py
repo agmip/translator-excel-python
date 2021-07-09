@@ -134,6 +134,7 @@ class Translator:
                             
                             ExcelJsonHelper.create_path(temp_path1,itemParent)
                             
+                            
                             ExcelJsonHelper.recursivity_json_path(temp_path2,itemParent, item, data_type)
             
                     
@@ -145,9 +146,14 @@ class Translator:
 
 
         DELETE_THIS=["eid","treat_id", "wst_id", 'soil_id']
-        print("Step 4 finished (deleting ids)")
+        
 
         ExcelJsonHelper.remove_keys_level(child_grouper,3,DELETE_THIS)
 
-        print(child_grouper["experiments"])
+        ExcelJsonHelper.get_items_from_parent(child_grouper,["cul_name","crid"])
+        print("Step 4 finished json methods(deleting ids, get from parent)")
+        
+
+        
+
         ExcelJsonHelper.write_json(child_grouper,outputfile)
