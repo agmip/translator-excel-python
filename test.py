@@ -15,13 +15,17 @@ OUTPUT2 = "/home/mistea/PhD/development/translator-excel-agmip/test_data/output/
 
 
 #TEST3 = "Breedwheat Biotech panel trials for model calibration (T1.3)_2021-06-07"
+
+LINUXPATH= "/home/mistea/PhD/development/translator-excel-agmip/test_data/"
+WINDOWSPATH= "C:/Users/vargas/Documents/PhD/development/translator-excel-agmip/test_data/"
+
 TEST3 = "Breedwheat Biotech panel trials for model calibration (T1.3)_2021-07-15"
-INPUT3 ="/home/mistea/PhD/development/translator-excel-agmip/test_data/input/pierre_july_2021/%s.xlsx"%TEST3
-OUTPUT3 = "/home/mistea/PhD/development/translator-excel-agmip/test_data/output/pierre_july_2021/%s.json"%TEST3
+INPUT3 =WINDOWSPATH+"input/pierre_july_2021/%s.xlsx"%TEST3
+OUTPUT3 = WINDOWSPATH+"output/pierre_july_2021/%s.json"%TEST3
 
 TEST4 = "SolACE_data_template_v3.2_(with sample data)_2021-07-15"
-INPUT4 ="/home/mistea/PhD/development/translator-excel-agmip/test_data/input/pierre_july_2021/%s.xlsx"%TEST4
-OUTPUT4 = "/home/mistea/PhD/development/translator-excel-agmip/test_data/output/pierre_july_2021/%s.json"%TEST4
+INPUT4 =WINDOWSPATH+"input/pierre_july_2021/%s.xlsx"%TEST4
+OUTPUT4 = WINDOWSPATH+"output/pierre_july_2021/%s.json"%TEST4
 
 
 Translator.translate(INPUT3, OUTPUT3)

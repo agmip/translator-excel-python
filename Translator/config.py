@@ -232,6 +232,33 @@ class Config:
                 "renameHeader": [
                     {"name":"wst_dataset" , "newName":"wst_id"}
                 ]
+            },
+
+            # #time series data
+            {
+                "name":"summary",
+                "type":"map",
+                "path":["experiments","observed"],
+                "sheetPattern":"Summary",
+                "transformHeader":"toLowerCase",
+                "headerRow":"2",
+                "levels": LEVELS_EXPERIMENT,
+                "renameHeader": [
+                    {"name":"treat_id" , "newName":"trt_name"}
+                ]
+            },
+            {#always after summary, because it creates the map object
+                "name":"observations",
+                "type":"list",
+                "path":["experiments","observed","timeSeries"],
+                "sheetPattern":"Obs",
+                "transformHeader":"toLowerCase",
+                "headerRow":"2",
+                "levels": LEVELS_EXPERIMENT,
+                
+                "renameHeader": [
+                    {"name":"treat_id" , "newName":"trt_name"}
+                ]
             }
         ]
         return dict

@@ -4,7 +4,7 @@ block_cipher = None
 
 
 a = Analysis(['PythonTranslatorExcelAgMIP.py'],
-             pathex=['/home/mistea/PhD/development/translator-excel-agmip'],
+             pathex=['C:\\Users\\vargas\\Documents\\PhD\\development\\translator-excel-agmip'],
              binaries=[],
              datas=[],
              hiddenimports=[],

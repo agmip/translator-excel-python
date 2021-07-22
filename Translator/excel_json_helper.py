@@ -64,7 +64,6 @@ class ExcelJsonHelper:
         PLOT_CONFIG= "experiments"
         config_name = data.get('name')
 
-        print("sheet_name", sheet_name)
         header_row=int(data.get('headerRow'))
 
         ## functions
@@ -222,6 +221,7 @@ class ExcelJsonHelper:
             local_data["sheetName"]=sheetName
             local_data['headerRow']=base_data['headerRow']
             local_data['transformHeader']=base_data['transformHeader']
+            local_data['renameHeader']=base_data.get('renameHeader')
 
             more_settings=  base_data.get("sheetConfig")
             if more_settings is not None:

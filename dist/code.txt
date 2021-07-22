@@ -1,0 +1,18 @@
+PythonTranslatorExcelAgMIP.exe -i "C:\Users\vargas\Documents\PhD\development\translator-excel-agmip\test_data\input\pierre_july_2021\Breedwheat Biotech panel trials for model calibration (T1.3)_2021-07-15.xlsx" -o "Breedwheat Biotech panel trials for model calibration (T1.3)_2021-07-15.json"
+
+
+PythonTranslatorExcelAgMIP.exe -i "C:\Users\vargas\Documents\PhD\development\translator-excel-agmip\test_data\input\pierre_july_2021\SolACE_data_template_v3.2_(with sample data)_2021-07-15.xlsx" -o "SolACE_data_template_v3.2_(with sample data)_2021-07-15.json"
+
+
+Hello Pierre and Sibylle,
+
+The translation of the observed data work as follow:
+
+* All the sheets having the pattern (begins with) Obs, they will be translated to the observed/timeseries path, if you don't want to translate yet just rename the sheet like "notObs" 
+* All the sheets having the pattern (begins with) Summary will be located in the path observed/ not in the timeseries one.
+
+To consider: IDs works like in the events (eid or treat_id).
+
+I will share with you the file compiled to windows:
+
+

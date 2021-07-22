@@ -72,7 +72,7 @@ class Translator:
             config_name = local_config["name"]
             config_expand = local_config["expand"]
             
-            print("Config", config_name)
+            
             
             for exp in config_expand:
                 col= exp["col"]
@@ -118,6 +118,7 @@ class Translator:
                     
                     if not selected_level:
                         print("item not link with experiments:", item)
+                        print("sheet",local_data["name"])
                         
                    
                     #locate into the map
