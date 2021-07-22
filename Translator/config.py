@@ -3,17 +3,22 @@
 
 # experiment items in agmip json are plots for this code
 
-LEVELS_EXPERIMENT = ["treat_id", "eid"]
+LEVELS_EXPERIMENT = ["trt_name", "eid"]
 LEVELS_WEATHER = ["wst_id"]
 LEVELS_SOIL = ["soil_id"]
 
 EXPAND_ORDER=["experiment_description","treatments","experiments", "weathers"]
 
+DATES_COLUMNS = ["sdat","icdat","date"]
 class Config:
     """A class to define how to scan the JSON file"""
 
     @classmethod
     def get_expand_order(cls):
+        return EXPAND_ORDER
+
+    @classmethod
+    def get_dates(cls):
         return EXPAND_ORDER
     @classmethod
     def get_configuration(cls):
@@ -30,14 +35,14 @@ class Config:
                 "headerRow":"2",
                 "levels": LEVELS_EXPERIMENT,
                 "expand": [
-                    {"col":"trt_name","config_name":"treatments"}
-                    # {"col":"cul_name","config_name":"crops"}
-                    ],
+                    {"col":"trt_name","config_name":"treatments"},
+                    {"col":"cul_name","config_name":"crops"}
+                ],
                 "renameHeader": [
-                    
                     {"name":"treat_id" , "newName":"trt_name"}
                 ],
-                "takeSubset": ["trt_name", "cul_name"]
+                "takeSubset": ["trt_name", "cul_name"],
+                #"newColumns":[{"name":"trt_name" , "from":"treat_id"}]
                 #"excludeSubset":["crid","cul_name"]
             },
             {
@@ -117,30 +122,36 @@ class Config:
                 "sheetConfig":{
                     'Planting_events':{
                         "renameHeader": [
-                            {"name":"pdate" , "newName":"date"}
-                        ]
+                            {"name":"pdate" , "newName":"date"},
+                            {"name":"treat_id" , "newName":"trt_name"}
+                        ],
+                        "excludeSubset":["sdat"]
                     },
                     'Harvest_events':{
                         "renameHeader": [
-                            {"name":"hadat" , "newName":"date"}
+                            {"name":"hadat" , "newName":"date"},
+                            {"name":"treat_id" , "newName":"trt_name"}
                         ]
                     }
                     ,
                     'Irrigation_events':{
                         "renameHeader": [
-                            {"name":"idate" , "newName":"date"}
+                            {"name":"idate" , "newName":"date"},
+                            {"name":"treat_id" , "newName":"trt_name"}
                         ]
                     }
                     ,
                     'Fertilizer_events':{
                         "renameHeader": [
-                            {"name":"fedate" , "newName":"date"}
+                            {"name":"fedate" , "newName":"date"},
+                            {"name":"treat_id" , "newName":"trt_name"}
                         ]
                     }
                     ,
                     'Tillage_events':{
                         "renameHeader": [
-                            {"name":"tdate" , "newName":"date"}
+                            {"name":"tdate" , "newName":"date"},
+                            {"name":"treat_id" , "newName":"trt_name"}
                         ]
                     }
                 },
@@ -169,15 +180,15 @@ class Config:
             },
 
             
-            # {
-            #     "name":"crops",
-            #     "type":"expandable",
-            #     "path":[],
-            #     "sheetName":"Genotypes",
-            #     "transformHeader":"toLowerCase",
-            #     "headerRow":"2",
-            #     "takeSubset": [ "cul_name", "crid"]
-            # },
+            {
+                "name":"crops",
+                "type":"expandable",
+                "path":[],
+                "sheetName":"Genotypes",
+                "transformHeader":"toLowerCase",
+                "headerRow":"2",
+                "takeSubset": [ "cul_name", "crid"]
+            },
 
             # weather
             {

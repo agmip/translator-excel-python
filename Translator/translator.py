@@ -142,18 +142,22 @@ class Translator:
                     del child_grouper[local_data["name"]]  # memory clean
 
 
-        print("Step 3 finished (Joning and linking)")
+        print("Step 3 finished (Joining and linking)")
 
 
-        DELETE_THIS=["eid","treat_id", "wst_id", 'soil_id']
+        DELETE_THIS=["eid","trt_name", "wst_id", 'soil_id']
+
         
 
         ExcelJsonHelper.remove_keys_level(child_grouper,3,DELETE_THIS)
 
         ExcelJsonHelper.get_items_from_parent(child_grouper,["cul_name","crid"])
+
+        ExcelJsonHelper.remove_keys_level(child_grouper,2,['crid','cul_name'], False)
+
         print("Step 4 finished json methods(deleting ids, get from parent)")
         
 
-        
+        #ExcelJsonHelper.validate_dates_format(child_grouper, Config.get_dates())
 
         ExcelJsonHelper.write_json(child_grouper,outputfile)

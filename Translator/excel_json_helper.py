@@ -73,8 +73,7 @@ class ExcelJsonHelper:
         take_subset = data.get('takeSubset')
         exclude_subset = data.get('excludeSubset')
         rename_header = data.get('renameHeader') # list of thing to rename
-        typing = data.get("typing") # list of thing to rename
-        
+        new_columns = data.get('newColumns')
         
 
         is_open_sheet= excel_helper.activate_sheet(sheet_name)
@@ -113,6 +112,8 @@ class ExcelJsonHelper:
 
                     myDate=datetime.datetime(*excel_helper.date_as_tuple(values[index]))
                     myDateStr="{:%Y%m%d}".format(myDate)
+
+                    myDateStr= "\"%s\""%myDateStr
                     
                     values[index]=myDateStr
                     
@@ -127,6 +128,7 @@ class ExcelJsonHelper:
                 elif(x==excel_helper.XL_CELL_NUMBER):
                     if values[index].is_integer():
                         values[index]=int(values[index])
+                    values[index]= "\"%s\""%values[index]
 
 
             new_row=json_template.format(*values)
@@ -144,7 +146,13 @@ class ExcelJsonHelper:
             if exclude_subset is not None:
                 new_row_dic_filtred = dict(filter(lambda elem: elem[0] not in exclude_subset , new_row_dic_filtred.items()))
 
-        
+            if new_columns is not None:
+                for new_column in new_columns: 
+                    col= new_column["name"]
+                    from_col_conf=new_column["from"]
+                    from_col_value=new_row_dic_filtred[from_col_conf]
+                    new_row_dic_filtred.update({col:from_col_value})
+
             json_list_experiments.append(new_row_dic_filtred)
 
            
@@ -232,6 +240,8 @@ class ExcelJsonHelper:
                 listObjects=cls.flatten_planting_events(listObjects , sheetElementsList)
             else:
                 listObjects=listObjects + sheetElementsList
+
+            print(sheetName, len(listObjects))
         
         return listObjects
     @classmethod
@@ -247,8 +257,6 @@ class ExcelJsonHelper:
     # given two dictionaries check if for any of the ids they are equal
     @classmethod
     def validate_multilevel_ids(cls,ids, element1,element2):
-        print("element1",element1)
-        print("element2",element2)
         for id in ids:
             if id in element1 and id in element2:
                 if element1[id]==element2[id]:
@@ -291,21 +299,25 @@ class ExcelJsonHelper:
 
     # a function to delete keys from an specific depth
     @classmethod
-    def remove_keys_level(cls,element, starting_level, delete_keys):
-
-        
+    def remove_keys_level(cls,element, starting_level, delete_keys, recursive=True):
         if isinstance(element, dict):
             if starting_level<=0: # start deleting 
+                
                 for delete_key in delete_keys:
                     if delete_key in element:
-                        del element[delete_key] 
+                        del element[delete_key]
+                
+                if not recursive: # to avoid delete the keys in the internal nodes
+                    
+                    return
+
 
             for key, value in element.items():
-                cls.remove_keys_level(value, starting_level-1, delete_keys)
+                cls.remove_keys_level(value, starting_level-1, delete_keys,recursive)
         
         elif isinstance(element, list):
             for item in element:
-                cls.remove_keys_level(item, starting_level-1, delete_keys)
+                cls.remove_keys_level(item, starting_level-1, delete_keys,recursive)
         
         else: return
 
@@ -320,7 +332,6 @@ class ExcelJsonHelper:
         
         if KEY_EVENT in current_elements and current_elements[KEY_EVENT]=="planting":
             current_elements.update(keys_values_parent)
-            print("planting", current_elements)
         else:
             if isinstance(current_elements, list):
                 
