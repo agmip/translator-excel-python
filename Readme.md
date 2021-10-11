@@ -1,5 +1,5 @@
 # About 
-This is a Python console project to translate an excel file to AgMIP JSON.
+This is a Python console project to translate excel files to AgMIP JSON.
 
 | File | Function |
 | ------------- | ------------- |
