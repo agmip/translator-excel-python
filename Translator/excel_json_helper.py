@@ -164,7 +164,7 @@ class ExcelJsonHelper:
                 for item in reduce_list:
                     
                     item.update( {"plot_id":item[take_subset[0]]+"-"+ item[take_subset[1]]} )
-            
+                    
             return reduce_list
         return json_list_experiments
     
