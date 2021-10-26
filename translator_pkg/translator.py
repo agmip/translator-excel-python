@@ -1,8 +1,8 @@
 ﻿
 
-from Translator.config import Config
-from Translator.excel_helper import ExcelHelper
-from Translator.excel_json_helper import ExcelJsonHelper
+from translator_pkg.config import Config
+from translator_pkg.excel_helper import ExcelHelper
+from translator_pkg.excel_json_helper import ExcelJsonHelper
 
 import sys
 
@@ -123,9 +123,9 @@ class Translator:
                    
                     #locate into the map
                     for itemParent in child_grouper[base_path]:
-                        # it can either experiment or treatments IDs
+                        # it can be either experiment or treatments IDs
+
                         # some items don't have the selected level id
-                        
                         if selected_level in itemParent \
                             and  itemParent[selected_level]==item[selected_level]:
 
