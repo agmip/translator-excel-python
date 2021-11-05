@@ -10,7 +10,7 @@ Next, copy the file into the folder ```<project>/examples/```. From there in a c
 PythonTranslatorExcelAgMIP.exe -i "<file_name>.xlsx" -o "output.json"
 ```
 
-The executable runs in a windows 64 bits machine, for other architectures it is neccesary to create a new exe file as mentioned in the next sections.
+The executable runs in a windows 64 bits machine, for other architectures it is necessary to create a new exe file as mentioned in the next sections.
 
 ## Project Structure
 
