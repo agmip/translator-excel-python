@@ -23,9 +23,9 @@ The executable runs in a windows 64 bits machine, for other architectures it is 
 | ./translator_pkg/excel_helper.py | Python class helper to manage all the methods related to excel file manipulation  |
 | ./translator_pkg/config.py | A Python dictionary that indicates how each excel sheet should be explored and located in the JSON file     |
 
-# How to start coding in this project?
+# Code using visual studio
 
-Since this is a Python project, (1) programmers should install Python Dev Tools in visual studio and
+Since this is a Python project, programmers using visual studio should (1) install Python Dev Tools and
 (2) configure a python3 environment.
 
 
@@ -63,9 +63,7 @@ Check if the environment was created  ```conda env list```
 After creating the environment, open the project in the solution explorer and click right over *Python environments*
 go to *View All Python Environments* select the envTranslator.
 
-
-
-# How to create the executable from Python files?
+# How to create the executable file?
 
 This process was reached using the PyInstaller program. To install you should go to the root file using Anaconda Prompt.
 ```
@@ -91,7 +89,7 @@ pyinstaller --onefile --distpath "../../Released"  --workpath  "./Pyinstaller/" 
 
 The .exe file will be located in the ./Released folder
 
-# How to run the executable?
+## How to run the executable?
 After creation the file will be located in 
 ``` 
 cd ./Released/
