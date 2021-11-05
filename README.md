@@ -1,15 +1,26 @@
 # translator-excel-python
 Python translator from spreadsheet format to ACEB used in AgMIP Wheat work on potential yield.
 
+# How to run the example?
+
+The executable file can be downloaded from the release link. Executable's name: "PythonTranslatorExcelAgMIP.exe".
+Then,copy the file into the folder ```<project>/examples/```. From there in a command line execute: 
+
+``` 
+PythonTranslatorExcelAgMIP.exe -i "<file_name>.xlsx" -o "output.json"
+```
+The executable runs in a windows 64 bits machine, for other architectures it is neccesary to create a new exe file as mentioned in the next sections.
+
+# Project Structure
 
 | File | Function |
 | ------------- | ------------- |
 | PythonTranslatorExcelAgMIP.py  | Get Console arguments and invoke the translator  |
-| ./Translator  | Folder containing translator package  |
-| ./Translator/translator.py  | Python class that represents the translator logic this file imports **excel_json_helper.py**, **excel_helper.py**, **config.py**  |
-| ./Translator/ excel_json_helper.py  | Python class helper with utils to create a specific JSON  based on the configuration for the processed sheet   |
-| ./Translator/excel_helper.py | Python class helper to manage all the methods related to excel file manipulation  |
-| ./Translator/config.py | A Python dictionary that indicates how each excel sheet should be explored and located in the JSON file     |
+| ./translator_pkg  | Folder containing translator package  |
+| ./translator_pkg/translator.py  | Python class that represents the translator logic this file imports **excel_json_helper.py**, **excel_helper.py**, **config.py**  |
+| ./translator_pkg/ excel_json_helper.py  | Python class helper with utils to create a specific JSON  based on the configuration for the processed sheet   |
+| ./translator_pkg/excel_helper.py | Python class helper to manage all the methods related to excel file manipulation  |
+| ./translator_pkg/config.py | A Python dictionary that indicates how each excel sheet should be explored and located in the JSON file     |
 
 # How to start coding in this project?
 
