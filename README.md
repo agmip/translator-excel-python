@@ -23,7 +23,7 @@ The executable runs in a windows 64 bits machine, for other architectures it is 
 | ./translator_pkg/excel_helper.py | Python class helper to manage all the methods related to excel file manipulation  |
 | ./translator_pkg/config.py | A Python dictionary that indicates how each excel sheet should be explored and located in the JSON file     |
 
-# Code using visual studio
+# How to start conding using visual studio?
 
 Since this is a Python project, programmers using visual studio should (1) install Python Dev Tools and
 (2) configure a python3 environment.
